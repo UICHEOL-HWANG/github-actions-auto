@@ -19,3 +19,17 @@ jobs:
       - name: Build and Run Docker Compose 
         run: |
           docker-compose up -d --build
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [self-hosted, label-go]
+    steps:
+      - name: SSH and Deploy to EC2 
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd 
