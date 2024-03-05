@@ -20,6 +20,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CICD_TOKEN }}
 
+      # 권한 부여
+      - name: Set permissions
+        run: |
+          sudo mkdir -p /github-actions-auto
+          sudo chown -R $USER:$USER /github-actions-auto
+          sudo chmod -R 755 /github-actions-auto
+
       # Docker Compose 실행
       - name: Build and Run Docker Compose
         run: |
