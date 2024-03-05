@@ -30,7 +30,6 @@ jobs:
     name: Deploy
     runs-on: [self-hosted, label-go]
     steps:
-      - uses: actions/checkout@v2
       - name: SSH and Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -39,9 +38,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             if [ ! -d "/github-actions-auto" ]; then
-              git clone https://github.com/UICHEOL-HWANG/github-actions-auto.git /github/workspace/github-actions-auto
+              git clone https://github.com/UICHEOL-HWANG/github-actions-auto.git /github-actions-auto
             fi
-            cd /github/workspace/github-actions-auto
+            cd /github-actions-auto
             git pull
-            docker-compose down
+            if docker-compose ps | grep -q "Up"; then
+              docker-compose down
+            fi
             docker-compose up -d --build
