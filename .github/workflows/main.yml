@@ -30,7 +30,9 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo chmod 666 /var/run/docker.sock
+            sudo /usr/sbin/groupadd -f docker
+            sudo /usr/sbin/usermod -aG docker `user`
+            sudo chown root:docker /var/run/docker.sock
             cd /github-actions-auto
             git pull
             docker-compose down
