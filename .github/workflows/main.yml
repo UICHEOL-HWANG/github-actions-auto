@@ -46,4 +46,4 @@ jobs:
               docker-compose down
             fi
             docker-compose up -d --build
-            cp -r /home/ubuntu/actions-runner/_work/github-actions-auto/* /home/ubuntu/github-actions-auto
+            sudo cp -r /home/ubuntu/actions-runner/_work/github-actions-auto/* /home/ubuntu/github-actions-auto
