@@ -44,10 +44,6 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            if [ ! -d "/github-actions-auto" ]; then
-              git clone https://github.com/UICHEOL-HWANG/github-actions-auto.git /github-actions-auto
-            fi
-            cd /github-actions-auto
             git pull
             if docker-compose ps | grep -q "Up"; then
               docker-compose down
