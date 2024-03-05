@@ -1,4 +1,4 @@
-name : CI-CD & Docker-compose 
+name: CI-CD & Docker-compose
 
 on:
   push:
@@ -7,18 +7,13 @@ on:
 
 jobs:
   build:
-    name: Compose-Up 
+    name: Compose-Up
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up docker-compose
-        run: |
-          DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-          mkdir -p $DOCKER_CONFIG/cli-plugins
-          curl -SL https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-          chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
-        
-      - name: Build and Run Docker Compose 
+      
+      # Docker Compose 실행
+      - name: Build and Run Docker Compose
         run: |
           docker-compose up -d --build
 
@@ -27,7 +22,8 @@ jobs:
     name: Deploy
     runs-on: [self-hosted, label-go]
     steps:
-      - name: SSH and Deploy to EC2 
+      # SSH를 사용하여 EC2 인스턴스에 배포
+      - name: SSH and Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -35,6 +31,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /github-actions-auto
-            git pull 
-            docker-compose down 
+            git pull
+            docker-compose down
             docker-compose up -d --build
