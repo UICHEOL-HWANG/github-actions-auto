@@ -39,6 +39,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # 저장소 클론 (처음 실행시)
+            if [ ! -d "/github-actions-auto" ]; then
+              git clone https://github.com/UICHEOL-HWANG/github-actions-auto.git ~/github-actions-auto
+            fi
             cd /github-actions-auto
             git pull
             docker-compose down
