@@ -20,13 +20,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CICD_TOKEN }}
 
-      # 권한 부여
-      - name: Set permissions
-        run: |
-          sudo mkdir -p /github-actions-auto
-          sudo chown -R $USER:$USER /github-actions-auto
-          sudo chmod -R 755 /github-actions-auto
-
       # Docker Compose 실행
       - name: Build and Run Docker Compose
         run: |
@@ -44,8 +37,13 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            if [ ! -d "/home/ubuntu/actions-runner/_work/github-actions-auto" ]; then
+              git clone https://github.com/UICHEOL-HWANG/github-actions-auto.git /home/ubuntu/actions-runner/_work/github-actions-auto
+            fi
+            cd /home/ubuntu/actions-runner/_work/github-actions-auto
             git pull
             if docker-compose ps | grep -q "Up"; then
               docker-compose down
             fi
             docker-compose up -d --build
+            cp -r /home/ubuntu/actions-runner/_work/github-actions-auto/* /home/ubuntu/github-actions-auto
