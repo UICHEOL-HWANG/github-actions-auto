@@ -37,13 +37,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            if [ ! -d "/home/ubuntu/actions-runner/_work/github-actions-auto" ]; then
-              git clone https://github.com/UICHEOL-HWANG/github-actions-auto.git /home/ubuntu/actions-runner/_work/github-actions-auto
+            if [ ! -d "/home/ubuntu/github-actions-auto" ]; then
+              git clone https://github.com/UICHEOL-HWANG/github-actions-auto.git /home/ubuntu/github-actions-auto
             fi
-            cd /home/ubuntu/actions-runner/_work/github-actions-auto
+            cd /home/ubuntu/github-actions-auto
             git pull
             if docker-compose ps | grep -q "Up"; then
               docker-compose down
             fi
             docker-compose up -d --build
-            sudo cp -r /home/ubuntu/actions-runner/_work/github-actions-auto/* /home/ubuntu/github-actions-auto
